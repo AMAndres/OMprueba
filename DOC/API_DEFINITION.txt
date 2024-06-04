@@ -1,0 +1,144 @@
+-----------------------------------------------------------------------------------------
+1 - Obtener listado de pedidos pudiendo filtrar por fecha de creación, estado y precio.
+-----------------------------------------------------------------------------------------
+GET
+/api/orders?created=2024-06-02&status=1&price=1.10&apikey=1234567890abcdef12341567890abcdef
+
+HTTP Responses:
+	200 OK - Pedidos recuperados.
+	204 No content - No existen pedidos para los filtros proporcionados.
+	500 Internal server error - Error inesperado al procesar la solicitud.
+
+HTTP 200 - Body response:
+[
+  {
+    "ID": 1,
+    "DATE": "2024-02-19",
+    "ITEMS": 2,
+    "BASE_AMOUNT": 67.4,
+    "AMOUNT": 77.51,
+    "STATUS": 1
+  }
+]
+
+
+-----------------------------------------------------------------------------------------
+2 - Obtener productos buscando por nombre.
+-----------------------------------------------------------------------------------------
+GET
+/api/products?name=cemento&apikey=1234567890abcdef12341567890abcdef
+
+HTTP Responses:
+	200 OK - Producto recuperado.
+	204 No content - No existe el producto a recuperar.
+	500 Internal server error - Error inesperado al procesar la solicitud.
+
+HTTP 200 - Body response:
+{
+  "ID": 1,
+  "NAME": "Cemento",
+  "DESCRIPTION": "Saco de cemento Portland para construcción.",
+  "PRICE": 25
+}
+
+
+-----------------------------------------------------------------------------------------
+3 - Crear un nuevo pedido añadiendo productos.
+-----------------------------------------------------------------------------------------
+POST
+/api/orders?apikey=1234567890abcdef12341567890abcdef
+
+{
+  "products": [
+    {
+      "id": 1,
+      "name": "Cemento"
+    },
+    {
+      "id": 2,
+      "name": "Ladrillos"
+    }
+  ]
+}
+
+HTTP Responses:
+	201 Created - Pedido creado correctamente.
+	409 Conflict - Datos incoherentes impiden la creación.
+	500 Internal server error - Error inesperado al procesar la solicitud.
+
+HTTP 409 - Body response:
+{
+	"message": "Descripción del problema"
+}
+
+
+-----------------------------------------------------------------------------------------
+4 - Obtener el detalle de un pedido por ID.
+-----------------------------------------------------------------------------------------
+GET
+/api/orders/{order_id}
+/api/orders/123456?apikey=1234567890abcdef12341567890abcdef
+
+HTTP Responses:
+	200 OK - Pedido recuperado.
+	204 No content - No existe el pedido a recuperar.
+	500 Internal server error - Error inesperado al procesar la solicitud.
+
+HTTP 200 - Body response:
+{
+  "ID": 1,
+  "DATE": "2024-02-19",
+  "ITEMS": 2,
+  "BASE_AMOUNT": 67.4,
+  "AMOUNT": 77.51,
+  "STATUS": 1
+}
+
+
+-----------------------------------------------------------------------------------------
+5 - Actualizar un pedido (quitar/añadir productos).
+-----------------------------------------------------------------------------------------
+PUT
+/api/orders/{order_id}
+/api/orders/123456?apikey=1234567890abcdef12341567890abcdef
+
+{
+  "products": [
+    {
+      "id": 1,
+      "name": "Cemento"
+    },
+    {
+      "id": 3,
+      "name": "Madera para construcción"
+    }
+  ]
+}
+
+HTTP Responses:
+	204 No content - Request procesada.
+	409 Conflict - Datos incoherentes impiden la actualización.
+	500 Internal server error - Error inesperado al procesar la solicitud.
+
+HTTP 409 - Body response:
+{
+	"message": "Descripción del problema"
+}
+
+
+-----------------------------------------------------------------------------------------
+6 - Eliminar un pedido por ID.
+-----------------------------------------------------------------------------------------
+DELETE
+/api/orders/{order_id}
+/api/orders/123456?apikey=1234567890abcdef12341567890abcdef
+
+HTTP Responses:
+	204 No content - Request procesada.
+	409 Conflict - El estado del pedido no permite su borrado.
+	500 Internal server error - Error inesperado al procesar la solicitud.
+
+HTTP 409 - Body response:
+{
+	"message": "Descripción del problema"
+}
